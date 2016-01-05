@@ -1060,26 +1060,29 @@
     // Pointer conparision
     XCTAssertEqual(message.repeatedInt32Array->_autocreator, message2);
     XCTAssertTrue([message.repeatedStringArray
-        isKindOfClass:[GPBAutocreatedArray class]]);
+        isKindOfClass:[GPBAutocreatedArray<NSString *> class]]);
     XCTAssertEqual(
-        ((GPBAutocreatedArray *)message.repeatedStringArray)->_autocreator,
+        ((GPBAutocreatedArray<NSString *> *)message.repeatedStringArray)->_autocreator,
         message2);
   }
 
   XCTAssertNil(message.repeatedInt32Array->_autocreator);
   XCTAssertTrue(
-      [message.repeatedStringArray isKindOfClass:[GPBAutocreatedArray class]]);
+      [message.repeatedStringArray isKindOfClass:
+          [GPBAutocreatedArray<NSString *> class]]);
   XCTAssertNil(
-      ((GPBAutocreatedArray *)message.repeatedStringArray)->_autocreator);
+      ((GPBAutocreatedArray<NSString *> *)message.repeatedStringArray)->_autocreator);
 }
 
 - (void)testSetNilAutocreatedArray {
   // Setting array to nil should cause it to lose its delegate.
   TestAllTypes *message = [TestAllTypes message];
   GPBInt32Array *repeatedInt32Array = [message.repeatedInt32Array retain];
-  GPBAutocreatedArray *repeatedStringArray =
-      (GPBAutocreatedArray *)[message.repeatedStringArray retain];
-  XCTAssertTrue([repeatedStringArray isKindOfClass:[GPBAutocreatedArray class]]);
+  GPBAutocreatedArray<NSString *> *repeatedStringArray =
+      (GPBAutocreatedArray<NSString *> *)
+          [message.repeatedStringArray retain];
+  XCTAssertTrue([repeatedStringArray isKindOfClass:
+      [GPBAutocreatedArray<NSString *> class]]);
   XCTAssertEqual(repeatedInt32Array->_autocreator, message);
   XCTAssertEqual(repeatedStringArray->_autocreator, message);
   message.repeatedInt32Array = nil;
@@ -1114,9 +1117,9 @@
     XCTAssertNotNil(message.a);
     XCTAssertNotNil(message.a.strArray);
     XCTAssertFalse([message hasA]);
-    GPBAutocreatedArray *strArray =
-        (GPBAutocreatedArray *)[message.a.strArray retain];
-    XCTAssertTrue([strArray isKindOfClass:[GPBAutocreatedArray class]]);
+    GPBAutocreatedArray<NSString *> *strArray =
+        (GPBAutocreatedArray<NSString *> *)[message.a.strArray retain];
+    XCTAssertTrue([strArray isKindOfClass:[GPBAutocreatedArray<NSString *> class]]);
     XCTAssertEqual(strArray->_autocreator, message.a);  // Pointer comparision
     message.a.strArray = [NSMutableArray arrayWithObject:@"foo"];
     XCTAssertTrue([message hasA]);
@@ -1147,8 +1150,10 @@
     XCTAssertFalse([message hasA]);
     message.a.strArray = message.a.strArray;
     XCTAssertTrue([message hasA]);
-    XCTAssertTrue([message.a.strArray isKindOfClass:[GPBAutocreatedArray class]]);
-    XCTAssertNil(((GPBAutocreatedArray *)message.a.strArray)->_autocreator);
+    XCTAssertTrue([message.a.strArray isKindOfClass:
+        [GPBAutocreatedArray<NSString *> class]]);
+    XCTAssertNil(
+        ((GPBAutocreatedArray<NSString *> *)message.a.strArray)->_autocreator);
   }
 }
 
@@ -1258,17 +1263,19 @@
     // Pointer conparision
     XCTAssertEqual(message.iToI->_autocreator, message2);
     XCTAssertTrue([message.strToStr
-        isKindOfClass:[GPBAutocreatedDictionary class]]);
-    XCTAssertEqual(
-        ((GPBAutocreatedDictionary *)message.strToStr)->_autocreator,
-        message2);
+        isKindOfClass:[GPBAutocreatedDictionary<NSString *, NSString *> class]]);
+    GPBAutocreatedDictionary<NSString *, NSString *> *strToStr =
+        (GPBAutocreatedDictionary<NSString *, NSString *> *)message.strToStr;
+    XCTAssertEqual(strToStr->_autocreator, message2);
   }
 
   XCTAssertNil(message.iToI->_autocreator);
   XCTAssertTrue(
-      [message.strToStr isKindOfClass:[GPBAutocreatedDictionary class]]);
-  XCTAssertNil(
-      ((GPBAutocreatedDictionary *)message.strToStr)->_autocreator);
+      [message.strToStr isKindOfClass:
+          [GPBAutocreatedDictionary<NSString *, NSString *> class]]);
+  GPBAutocreatedDictionary<NSString *, NSString *> *strToStr =
+      (GPBAutocreatedDictionary<NSString *, NSString *> *)message.strToStr;
+  XCTAssertNil(strToStr->_autocreator);
 }
 
 - (void)testSetNilAutocreatedMap {
@@ -1351,7 +1358,8 @@
     XCTAssertFalse([message hasA]);
     message.a.strToStr = message.a.strToStr;
     XCTAssertTrue([message hasA]);
-    XCTAssertTrue([message.a.strToStr isKindOfClass:[GPBAutocreatedDictionary class]]);
+    XCTAssertTrue([message.a.strToStr isKindOfClass:
+        [GPBAutocreatedDictionary<NSString *, NSString *> class]]);
     GPBAutocreatedDictionary<NSString *, NSString *> strToStr =
         (GPBAutocreatedDictionary<NSString *, NSString *> *)message.a.strToStr;
     XCTAssertNil(strToStr->_autocreator);
