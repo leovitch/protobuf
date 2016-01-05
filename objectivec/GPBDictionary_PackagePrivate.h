@@ -453,7 +453,8 @@
 
 #pragma mark - NSDictionary Subclass
 
-@interface GPBAutocreatedDictionary : NSMutableDictionary {
+@interface GPBAutocreatedDictionary<KeyType, ObjectType> :
+    NSMutableDictionary<KeyType, ObjectType> {
   @package
   GPB_UNSAFE_UNRETAINED GPBMessage *_autocreator;
 }

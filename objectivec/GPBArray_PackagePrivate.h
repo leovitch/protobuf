@@ -123,7 +123,7 @@
 
 #pragma mark - NSArray Subclass
 
-@interface GPBAutocreatedArray : NSMutableArray {
+@interface GPBAutocreatedArray<ObjectType> : NSMutableArray<ObjectType> {
  @package
   GPB_UNSAFE_UNRETAINED GPBMessage *_autocreator;
 }
