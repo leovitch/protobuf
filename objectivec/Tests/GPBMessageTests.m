@@ -55,7 +55,7 @@
   [message setOptionalInt32:1];
   [message setOptionalString:@"foo"];
   [message setOptionalForeignMessage:[ForeignMessage message]];
-  message.repeatedStringArray = [NSMutableArray array];
+  message.repeatedStringArray = [NSMutableArray<NSString *> array];
   [message.repeatedStringArray addObject:@"bar"];
   return message;
 }
@@ -67,7 +67,7 @@
   ForeignMessage *foreignMessage = [ForeignMessage message];
   [foreignMessage setC:3];
   [message setOptionalForeignMessage:foreignMessage];
-  message.repeatedStringArray = [NSMutableArray array];
+  message.repeatedStringArray = [NSMutableArray<NSString *> array];
   [message.repeatedStringArray addObject:@"qux"];
   return message;
 }
@@ -76,7 +76,7 @@
   TestAllTypes *message = [TestAllTypes message];
   [message setOptionalInt64:2];
   [message setOptionalString:@"baz"];
-  message.repeatedStringArray = [NSMutableArray array];
+  message.repeatedStringArray = [NSMutableArray<NSString *> array];
   [message.repeatedStringArray addObject:@"qux"];
   return message;
 }
@@ -89,7 +89,7 @@
   ForeignMessage *foreignMessage = [ForeignMessage message];
   [foreignMessage setC:3];
   [message setOptionalForeignMessage:foreignMessage];
-  message.repeatedStringArray = [NSMutableArray array];
+  message.repeatedStringArray = [NSMutableArray<NSString *> array];
   [message.repeatedStringArray addObject:@"qux"];
   [message.repeatedStringArray addObject:@"bar"];
   return message;
@@ -102,7 +102,7 @@
   [message setOptionalString:@"foo"];
   ForeignMessage *foreignMessage = [ForeignMessage message];
   [message setOptionalForeignMessage:foreignMessage];
-  message.repeatedStringArray = [NSMutableArray array];
+  message.repeatedStringArray = [NSMutableArray<NSString *> array];
   [message.repeatedStringArray addObject:@"qux"];
   [message.repeatedStringArray addObject:@"bar"];
   return message;
@@ -248,7 +248,7 @@
   [message setOptionalMessage:self.testRequiredInitialized];
   XCTAssertTrue(message.initialized);
 
-  message.repeatedMessageArray = [NSMutableArray array];
+  message.repeatedMessageArray = [NSMutableArray<TestRequired *> array];
   [message.repeatedMessageArray addObject:[TestRequired message]];
   XCTAssertFalse(message.initialized);
 
@@ -300,7 +300,7 @@
 - (void)testDataFromNestedUninitialized {
   TestRequiredForeign *message = [TestRequiredForeign message];
   [message setOptionalMessage:[TestRequired message]];
-  message.repeatedMessageArray = [NSMutableArray array];
+  message.repeatedMessageArray = [NSMutableArray<TestRequired *> array];
   [message.repeatedMessageArray addObject:[TestRequired message]];
   [message.repeatedMessageArray addObject:[TestRequired message]];
   NSData *data = [message data];
@@ -319,7 +319,7 @@
 
   TestRequiredForeign *message = [TestRequiredForeign message];
   [message setOptionalMessage:[TestRequired message]];
-  message.repeatedMessageArray = [NSMutableArray array];
+  message.repeatedMessageArray = [NSMutableArray<TestRequired *> array];
   [message.repeatedMessageArray addObject:[TestRequired message]];
   [message.repeatedMessageArray addObject:[TestRequired message]];
 
@@ -1276,9 +1276,11 @@
   TestRecursiveMessageWithRepeatedField *message =
       [TestRecursiveMessageWithRepeatedField message];
   GPBInt32Int32Dictionary *iToI = [message.iToI retain];
-  GPBAutocreatedDictionary *strToStr =
-      (GPBAutocreatedDictionary *)[message.strToStr retain];
-  XCTAssertTrue([strToStr isKindOfClass:[GPBAutocreatedDictionary class]]);
+  GPBAutocreatedDictionary<NSString *, NSString *> *strToStr =
+      (GPBAutocreatedDictionary<NSString *, NSString *> *)
+          [message.strToStr retain];
+  XCTAssertTrue([strToStr isKindOfClass:
+      [GPBAutocreatedDictionary<NSString *, NSString *> class]]);
   XCTAssertEqual(iToI->_autocreator, message);
   XCTAssertEqual(strToStr->_autocreator, message);
   message.iToI = nil;
@@ -1313,9 +1315,11 @@
     XCTAssertNotNil(message.a);
     XCTAssertNotNil(message.a.strToStr);
     XCTAssertFalse([message hasA]);
-    GPBAutocreatedDictionary *strToStr =
-        (GPBAutocreatedDictionary *)[message.a.strToStr retain];
-    XCTAssertTrue([strToStr isKindOfClass:[GPBAutocreatedDictionary class]]);
+    GPBAutocreatedDictionary<NSString *, NSString *> *strToStr =
+        (GPBAutocreatedDictionary<NSString *, NSString *> *)
+            [message.a.strToStr retain];
+    XCTAssertTrue([strToStr isKindOfClass:
+        [GPBAutocreatedDictionary<NSString *, NSString *> class]]);
     XCTAssertEqual(strToStr->_autocreator, message.a);  // Pointer comparision
     message.a.strToStr =
         [NSMutableDictionary dictionaryWithObject:@"abc" forKey:@"def"];
@@ -1348,7 +1352,9 @@
     message.a.strToStr = message.a.strToStr;
     XCTAssertTrue([message hasA]);
     XCTAssertTrue([message.a.strToStr isKindOfClass:[GPBAutocreatedDictionary class]]);
-    XCTAssertNil(((GPBAutocreatedDictionary *)message.a.strToStr)->_autocreator);
+    GPBAutocreatedDictionary<NSString *, NSString *> strToStr =
+        (GPBAutocreatedDictionary<NSString *, NSString *> *)message.a.strToStr;
+    XCTAssertNil(strToStr->_autocreator);
   }
 }
 
